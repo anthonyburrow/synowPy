@@ -5,21 +5,22 @@ n_elem = 92
 n_ion = 5
 
 
-def read_ref(fn):
+def read_ref(synow_model):
+    fn = f'{synow_model.params["refdata_path"]}/ref.dat'
     alam, agf, an, ai, aelow = np.loadtxt(fn, unpack=True)
+
+    alam *= 10.
+    agf *= np.log(10.)
 
     elamx = np.zeros((n_elem, n_ion))
     gfx = np.zeros((n_elem, n_ion))
     chix = np.zeros((n_elem, n_ion))
 
     for i in range(len(an)):
-        _an, _ai = an[i], ai[i]
+        j, k = int(an[i] - 1), int(ai[i])
 
-        elamx[_an, _ai] = alam
-        gfx[_an, _ai] = agf
-        chix[_an, _ai] = aelow
-
-    elamx *= 10.
-    gfx *= np.log(10.)
+        elamx[j, k] = alam[i]
+        gfx[j, k] = agf[i]
+        chix[j, k] = aelow[i]
 
     return elamx, gfx, chix

@@ -1,20 +1,19 @@
-# from .physics.constants import *
 from .features import ExpFeature, GaussFeature
 from .features.Feature import profile_map
 from .util.params import setup_params
-from .io.read_atomic import read_ref
+from .cython.initialize import initialize
 
 
-_fn_ref_data = './ref.dat'
+_synow_dir = 'C:/dev/synowPy'
 
 _temp_run_script = './runsynow_temp.sh'
 _temp_synthetic_fn = './temp.dat'
 
 
 _default_params = {
-    'synow_lines_path'     : '$HOME/synow/lines/',
-    'kurucz_linelist_path' : '$HOME/synow/kurucz_lines/',
-    'refdata_path'         : '$HOME/synow/src/',
+    'synow_lines_path'     : f'{_synow_dir}/lines/',
+    'kurucz_linelist_path' : f'{_synow_dir}/kurucz_lines/',
+    'refdata_path'         : f'{_synow_dir}/src_orig/',
     'spectrum_file'        : 'synthetic.dat',
     'vphot'                : 12000.0,
     'vmax'                 : 40000.0,
@@ -36,7 +35,7 @@ _default_params = {
 
 class Synow:
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, nradstep=10000, nwavestep=1024, *args, **kwargs):
         """Initialize the Synow model.
 
         Parameters
@@ -47,10 +46,13 @@ class Synow:
         ----------
         params: dict
         """
-        self._params = setup_params(_default_params, *args, **kwargs)
-        self._features = []
+        self.params = setup_params(_default_params, *args, **kwargs)
+        self.features = []
 
-        self._initialize()
+        self._nradstep = nradstep
+        self._nwavestep = nwavestep
+
+        self._taux = None
 
     def add_feature(self, prof=0, *args, **kwargs):
         if isinstance(prof, str):
@@ -61,21 +63,24 @@ class Synow:
         elif prof == 1:
             feature = GaussFeature(synow_model=self, *args, **kwargs)
 
-        self._features.append(feature)
+        self.features.append(feature)
+
+    def gen_spectrum(self, output=False, *args, **kwargs):
+        initialize(self)
 
     def summary(self):
         msg = ''
 
-        for key, val in self._params.items():
+        for key, val in self.params.items():
             msg += f'{key} : {val}\n'
 
-        if not self._features:
+        if not self.features:
             print(msg)
             return
 
         msg += '\n'
 
-        for feat in self._features:
+        for feat in self.features:
             msg += ' | '.join([f'{key} : {val}'
                                for key, val in feat._params.items()])
             msg += '\n'
@@ -83,13 +88,5 @@ class Synow:
         print(msg)
 
     @property
-    def params(self):
-        return self._params
-
-    @property
-    def features(self):
-        return self._features
-
-    def _initialize(self):
-        elamx, gfx, chix = read_ref(_fn_ref_data)
-        print(elamx)
+    def n_feat(self):
+        return len(self._features)
