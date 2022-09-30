@@ -1,11 +1,14 @@
-from .physics.constants import *
+# from .physics.constants import *
 from .features import ExpFeature, GaussFeature
 from .features.Feature import profile_map
 from .util.params import setup_params
+from .io.read_atomic import read_ref
 
 
-_temp_run_script = 'runsynow_temp.sh'
-_temp_synthetic_fn = 'temp.dat'
+_fn_ref_data = './ref.dat'
+
+_temp_run_script = './runsynow_temp.sh'
+_temp_synthetic_fn = './temp.dat'
 
 
 _default_params = {
@@ -88,5 +91,5 @@ class Synow:
         return self._features
 
     def _initialize(self):
-        # print(hc)
-        pass
+        elamx, gfx, chix = read_ref(_fn_ref_data)
+        print(elamx)
