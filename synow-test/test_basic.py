@@ -1,4 +1,4 @@
-import synow
+import synowPy
 
 
 global_params = {'tbb': 14000., 'vphot': 11000.}
