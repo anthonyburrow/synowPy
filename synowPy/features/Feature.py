@@ -13,7 +13,8 @@ _default_params = {
 
 profile_map = {
     'e': 0,
-    'g': 1
+    'g': 1,
+    'p': 2
 }
 
 
@@ -24,9 +25,14 @@ class Feature:
 
         # Special parameter defaults
         if 'vmine' not in kwargs:
-            self._params['vmine'] = synow_model.params['vphot']
+            self._params['vmine'] = 0.001 * synow_model.params['vphot']
         if 'vmaxe' not in kwargs:
-            self._params['vmaxe'] = synow_model.params['vmax']
+            self._params['vmaxe'] = 0.001 * synow_model.params['vmax']
+
+        # Scale parameters
+        self._params['vmine'] *= 1000.
+        self._params['vmaxe'] *= 1000.
+        self._params['vmaxg'] *= 1000.
 
         # Feature parameters
         self.elamx = None
@@ -34,6 +40,9 @@ class Feature:
         self.chix = None
 
         self.tau = None
+
+        # Misc
+        self.valid = True
 
     def __getattr__(self, attr):
         return self._params[attr]

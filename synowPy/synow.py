@@ -49,7 +49,7 @@ class Synow:
         self.params = setup_params(_default_params, *args, **kwargs)
         self.features = []
 
-        self._nradstep = nradstep
+        self.nradstep = nradstep
         self._nwavestep = nwavestep
 
         self._taux = None

@@ -1,4 +1,4 @@
-from .Feature import Feature
+from .Feature import Feature, profile_map
 
 
 class GaussFeature(Feature):
@@ -7,3 +7,7 @@ class GaussFeature(Feature):
         super().__init__(*args, **kwargs)
 
         self._params['sigma_v'] = sigma_v
+        self.prof = profile_map['g']
+
+        # Scale parameters
+        self._params['sigma_v'] *= 1000.

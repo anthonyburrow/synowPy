@@ -1,8 +1,8 @@
 import numpy as np
 
 
-n_elem = 92
-n_ion = 5
+# n_elem = 92
+# n_ion = 5
 
 
 def read_ref(synow_model):
