@@ -2,8 +2,8 @@ from ..util.params import setup_params
 
 
 _default_params = {
-    'an'       :   14,   # Si II as default
-    'ai'       :    1,
+    'an'       :    1,
+    'ai'       :    0,
     'tau1'     :  0.0,
     'vmine'    : None,
     'vmaxe'    : None,
@@ -27,6 +27,13 @@ class Feature:
             self._params['vmine'] = synow_model.params['vphot']
         if 'vmaxe' not in kwargs:
             self._params['vmaxe'] = synow_model.params['vmax']
+
+        # Feature parameters
+        self.elamx = None
+        self.gfx = None
+        self.chix = None
+
+        self.tau = None
 
     def __getattr__(self, attr):
         return self._params[attr]

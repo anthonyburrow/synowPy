@@ -7,7 +7,7 @@ syn = synowPy.Synow(**global_params)
 feat_params = {'an': 10, 'ai': 0, 've': 2.}
 syn.add_feature(prof='e', **feat_params)
 
-feat_params = {'an': 9, 've': 2.}
+feat_params = {'an': 9, 'ai': 3, 've': 2.}
 syn.add_feature(prof='g', **feat_params)
 
 syn.gen_spectrum(output=True)
