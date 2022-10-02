@@ -46,3 +46,5 @@ class Feature:
 
     def __getattr__(self, attr):
         return self._params[attr]
+
+    # TODO: __eq__
