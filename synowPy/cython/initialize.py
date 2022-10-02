@@ -40,19 +40,10 @@ def _setup_radial(feature, synow_model):
     feature.taux[1] = feature.temp * 1000. * k
 
     rad_steps = np.linspace(begin, stop - 1, stop - begin)
-    if feature.prof == profile_map['p']:
-        # TODO: Check this because it seems like a bug (xsto cancels in orig)
-        # xsto = max(1., vphot / feature.vmine)
-        # tau = (xsto * (i - 1))**(-feature.pwrlawin) * (xsto * (begin - 1))**feature.pwrlawin
-        tau = ((begin - 1.) / (rad_steps - 1.))**feature.pwrlawin
-    elif feature.prof == profile_map['g']:
-        f = (rad_steps - 1.) / grid
-        tau = np.exp(-0.5 * (feature.vmaxg - vphot * f)**2 / feature.sigma_v**2)
-    elif feature.prof == profile_map['e']:
-        f = (rad_steps - 1.) / grid
-        tau = np.exp((feature.vmine - vphot * f) / feature.ve)
-
+    tau = feature.calc_tau(synow_model=synow_model, rad_steps=rad_steps,
+                           begin=begin)
     feature.taux[begin:stop] = feature.taux[0] * tau
+
     # TODO: Write to file command
 
     # feature.taux[0] += tauxold
