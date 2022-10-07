@@ -2,7 +2,6 @@ import numpy as np
 
 from ..physics.constants import *
 from ..io.read_atomic import read_ref
-from ..features.Feature import profile_map
 
 
 def _setup_radial(feature, synow_model):
@@ -39,6 +38,7 @@ def _setup_radial(feature, synow_model):
     feature.taux[0] = feature.tau1 / wk
     feature.taux[1] = feature.temp * 1000. * k
 
+    # TODO: Double check the 1 -> 0 indexing since vectorizing for calculation
     rad_steps = np.linspace(begin, stop - 1, stop - begin)
     tau = feature.calc_tau(synow_model=synow_model, rad_steps=rad_steps,
                            begin=begin)
@@ -85,7 +85,10 @@ def initialize(synow_model):
         _setup_radial(feature, synow_model)
 
     n_feat = len(synow_model.features)
-    print(f'Initialization complete for {n_feat} species')
+    print(f'Initialization complete for {n_feat} species.')
+
+    delta_v = synow_model.params['delta_v']
+    print(f'Binning is {delta_v} km/s')
 
     # Synow does this...but what's the point?
     # for feature in synow_model.features:

@@ -2,6 +2,7 @@ from .features import ExpFeature, GaussFeature
 from .features.Feature import profile_map
 from .util.params import setup_params
 from .cython.initialize import initialize
+from .cython.continuum import setup_continuum
 
 
 _synow_dir = 'C:/dev/synowPy'
@@ -67,6 +68,7 @@ class Synow:
 
     def gen_spectrum(self, output=False, *args, **kwargs):
         initialize(self)
+        setup_continuum(self)
 
     def summary(self):
         msg = ''
